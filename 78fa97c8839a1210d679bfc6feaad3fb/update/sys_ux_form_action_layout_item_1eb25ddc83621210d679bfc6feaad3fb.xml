@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ux_form_action_layout_item">
+    <sys_ux_form_action_layout_item action="INSERT_OR_UPDATE">
+        <action display_value="Submit">deb25ddc83621210d679bfc6feaad3f7</action>
+        <active>true</active>
+        <color>secondary</color>
+        <description/>
+        <icon/>
+        <item_type>action</item_type>
+        <label>Submit</label>
+        <layout_group/>
+        <name>Submit</name>
+        <order>100</order>
+        <overflow>false</overflow>
+        <sys_class_name>sys_ux_form_action_layout_item</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-14 07:55:42</sys_created_on>
+        <sys_id>1eb25ddc83621210d679bfc6feaad3fb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Submit</sys_name>
+        <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+        <sys_update_name>sys_ux_form_action_layout_item_1eb25ddc83621210d679bfc6feaad3fb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-14 07:55:42</sys_updated_on>
+        <table>x_1466305_fortes_0_x_request_it_support</table>
+    </sys_ux_form_action_layout_item>
+</record_update>

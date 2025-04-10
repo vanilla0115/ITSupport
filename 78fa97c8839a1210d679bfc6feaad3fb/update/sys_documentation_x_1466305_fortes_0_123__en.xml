@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="" label="123" language="en" table="x_1466305_fortes_0_123">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element/>
+            <help/>
+            <hint/>
+            <label>123</label>
+            <language>en</language>
+            <name>x_1466305_fortes_0_123</name>
+            <plural>123s</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2025-01-01 11:36:46</sys_created_on>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>123</sys_name>
+            <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+            <sys_update_name>sys_documentation_x_1466305_fortes_0_123__en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2025-01-01 11:36:46</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

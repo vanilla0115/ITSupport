@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_attribute">
+    <sys_security_attribute action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition>Role=aea9075783121210d679bfc6feaad3bf</condition>
+        <description>Auto Created Attribute - ACL_cfd8191883a21210d679bfc6feaad3c5</description>
+        <is_dynamic>true</is_dynamic>
+        <is_localized>true</is_localized>
+        <is_system>false</is_system>
+        <label>ACL_cfd8191883a21210d679bfc6feaad3c5</label>
+        <lookup_table/>
+        <lookup_table_column/>
+        <name>x_1466305_fortes_0__ACL_cfd8191883a21210d679bfc6feaad3c5</name>
+        <script/>
+        <sys_class_name>sys_security_attribute</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-14 08:28:25</sys_created_on>
+        <sys_id>ed3a115883a21210d679bfc6feaad354</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_1466305_fortes_0__ACL_cfd8191883a21210d679bfc6feaad3c5</sys_name>
+        <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+        <sys_update_name>sys_security_attribute_ed3a115883a21210d679bfc6feaad354</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-14 08:28:25</sys_updated_on>
+        <type>compound</type>
+    </sys_security_attribute>
+</record_update>

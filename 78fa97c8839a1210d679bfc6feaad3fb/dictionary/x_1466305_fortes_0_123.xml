@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="46a1368683b29610d679bfc6feaad302" label="123" max_length="40" name="x_1466305_fortes_0_123" type="collection">
+        <element label="test1" max_length="40" name="test1" type="glide_date"/>
+        <element label="test2" max_length="40" name="test2" type="string"/>
+    </element>
+</database>

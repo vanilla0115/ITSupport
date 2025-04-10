@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json,application/xml,text/xml</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>PUT</http_method>
+        <name>UpdateStateAndCause</name>
+        <operation_script><![CDATA[(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+    // 获取请求体
+    var requestBody = request.body.data;
+	response.setHeader("Content-Type", "application/json");
+
+    // 检查请求体是否包含 ticket_number、state 和 cause
+    if (!requestBody.ticket_number || !requestBody.state || !requestBody.cause) {
+        response.setStatus(400);
+       
+
+        // 使用 getStreamWriter() 直接写入响应体
+        var writer = response.getStreamWriter();
+        writer.writeString(JSON.stringify({
+            resultcode: "E01", // 自定义错误代码
+            resultmessage: "Missing required fields: ticket_number, state, or cause" // 自定义错误消息
+        }));
+        return;
+    }
+
+    // 查询 x_1466305_fortes_0_x_request_it_support 表
+    var gr = new GlideRecord('x_1466305_fortes_0_x_request_it_support');
+    gr.addQuery('ticket_number', requestBody.ticket_number); // 根据 ticket_number 查找记录
+    gr.query();
+
+    if (gr.next()) {
+        // 更新 state 和 cause 字段
+        gr.state = requestBody.state;
+        gr.cause = requestBody.cause;
+        gr.update();
+
+        // 返回成功响应
+        response.setStatus(200);
+       
+
+        // 使用 getStreamWriter() 直接写入响应体
+        var writer = response.getStreamWriter();
+        writer.writeString(JSON.stringify({
+            resultcode: "S01", // 自定义成功代码
+            resultmessage: "正常連携" // 自定义成功消息
+        }));
+		// response.setBody({
+		//     resultcode: "S01", // 自定义成功代码
+        //     resultmessage: "Record updated successfully" // 自定义成功消息
+		// });
+    } else {
+        // 返回错误响应
+        response.setStatus(404);
+       
+
+        // 使用 getStreamWriter() 直接写入响应体
+        var writer = response.getStreamWriter();
+        writer.writeString(JSON.stringify({
+            resultcode: "SE01", // 自定义错误代码
+            resultmessage: "工单号不正" // 自定义错误消息
+        }));
+    }
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_1466305_fortes_0/updaterequestitsupport/update</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/update</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-16 13:13:18</sys_created_on>
+        <sys_id>05cc20cd83e6d210d679bfc6feaad308</sys_id>
+        <sys_mod_count>26</sys_mod_count>
+        <sys_name>UpdateStateAndCause</sys_name>
+        <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+        <sys_update_name>sys_ws_operation_05cc20cd83e6d210d679bfc6feaad308</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-01-13 05:34:17</sys_updated_on>
+        <web_service_definition display_value="UpdateRequestITSupport">799c2c8d83e6d210d679bfc6feaad31a</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>05cc20cd83e6d210d679bfc6feaad308</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-16 13:13:18</sys_created_on>
+        <sys_id>869ea801832ad210d679bfc6feaad36d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-16 13:13:18</sys_updated_on>
+        <table>sys_ws_operation</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

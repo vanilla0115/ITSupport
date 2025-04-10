@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_1466305_fortes_0.MyMaintenanceIntegration</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>向维修系统发送信息</description>
+        <mobile_callable>false</mobile_callable>
+        <name>MyMaintenanceIntegration</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var MyMaintenanceIntegration = Class.create();
+
+// 获取 API Key 和 API Secret
+var apikey = 'STG_SIDB_ANALYSIS_INFO_API_KEY';
+var apiSecret = '4AN5L7HRFE7YYRGAANYN3NAE74TJPA5Y7NJ3JML773YJT5G4E5N4FNMYENH7TA7A';
+var time = new GlideDateTime(); // 获取当前 UTC 时间
+var timeInMillis = time.getNumericValue(); // 获取时间戳（毫秒）
+
+var unixEpoch = Math.floor(timeInMillis/ 1000);
+gs.info("timestamp"+unixEpoch);
+var messageDigest = new GlideDigest();
+var sig = messageDigest.getSHA256Hex(apikey + apiSecret + unixEpoch).toLowerCase();
+
+
+
+// 记录日志：API Key、API Secret、时间戳和签名
+gs.info("API Key: " + apikey);
+gs.info("API Secret: " + apiSecret);
+gs.info("Unix Epoch: " + unixEpoch);
+gs.info("Signature: " + sig);
+
+MyMaintenanceIntegration.prototype = {
+    initialize: function() {},
+
+    // // 调用 SF001 接口（无附件）
+    // callMaintenanceSF001: function(ticketNumber, assignedTo, priority, description) {
+    //     try {
+    //         var resultFlg = false;
+    //         var request = new sn_ws.RESTMessageV2();
+    //         request.setHttpMethod('POST');
+    //         request.setEndpoint('http://121.36.243.219:8081/maintenance/sf001'); // Java 后端地址
+    //         request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    //         request.setRequestHeader('apikey', apikey);
+    //         request.setRequestHeader('sigtime', unixEpoch);
+    //         request.setRequestHeader('sig', sig);
+
+    //         // 记录日志：请求参数
+    //         gs.info("SF001 Request Parameters:");
+    //         gs.info("Ticket Number: " + ticketNumber);
+    //         gs.info("Assigned To: " + assignedTo);
+    //         gs.info("Priority: " + priority);
+    //         gs.info("Description: " + description);
+
+    //         // 构建请求体
+    //         var requestBody = {
+    //             "P_TICKET_NUMBER": ticketNumber,
+    //             "P_ASSIGNED_TO": assignedTo,
+    //             "P_PRIORITY": priority,
+    //             "P_DESCRIPTION": description
+    //         };
+    //         request.setRequestBody(JSON.stringify(requestBody));
+
+    //         // 记录日志：请求体
+    //         gs.info("SF001 Request Body: " + JSON.stringify(requestBody));
+
+    //         // 执行请求
+    //         var response = request.execute();
+    //         var responseBody = response.getBody();
+    //         var responseCode = response.getStatusCode();
+
+    //         // 记录日志：响应结果
+    //         gs.info("SF001 Response Code: " + responseCode);
+    //         gs.info("SF001 Response Body: " + responseBody);
+
+    //         // 处理响应
+    //         if (responseCode == 200) {
+    //             resultFlg = true;
+    //             gs.info("SF001 调用成功: " + responseBody);
+    //         } else {
+    //             resultFlg = false;
+    //             gs.error("SF001 调用失败: " + responseBody);
+    //         }
+
+    //         return resultFlg;
+    //     } catch (error) {
+    //         gs.error("SF001 调用异常: " + error);
+    //         return false;
+    //     }
+    // },
+
+    // 调用 SF002 接口（有附件）
+    callMaintenanceSF002: function(ticketNumber, order, attachment) {
+    try {
+        var resultFlg = false;
+        var request = new sn_ws.RESTMessageV2();
+        request.setHttpMethod('POST');
+		
+        request.setEndpoint('http://121.36.243.219:8081/maintenance/sf002'); 
+        var boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+        request.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+        request.setRequestHeader('apikey', apikey);
+        request.setRequestHeader('sigtime', unixEpoch);
+        request.setRequestHeader('sig', sig);
+// start the multipart data
+            var writer = request.getStreamWriter();
+        // 记录日志：请求参数
+        gs.info("SF002 Request Parameters:");
+        gs.info("Ticket Number: " + ticketNumber);
+
+      
+        // 记录日志：附件信息
+        gs.info("SF002 Attachment File Name: " + fileName);
+
+        // 构建请求体
+        var requestBody = [];
+        requestBody.push("--" + boundary);
+        requestBody.push('Content-Disposition: form-data; name="jsonData"');
+        requestBody.push('Content-Type: application/json');
+        requestBody.push('');
+        requestBody.push(JSON.stringify({
+            "P_TICKET_NUMBER": ticketNumber,
+            "P_FILE_NO": order
+        }));
+        requestBody.push("--" + boundary);
+        requestBody.push('Content-Disposition: form-data; name="file"; filename="' + fileName + '"');
+        requestBody.push('Content-Type: application/octet-stream');
+        requestBody.push('');
+          // 获取附件内容（使用 FileInputStream）
+        var fileName = attachment.getValue('file_name');var inputStream = new GlideSysAttachment().getContentStream(attachmentID);
+         writer.writeStream(inputStream);
+        // 将文件流写入请求体
+       
+        requestBody.push("--" + boundary + "--");
+
+        // 将请求体转换为字符串
+        var requestBodyString = requestBody.join('\r\n');
+
+        // 设置请求体
+        request.setRequestBody(requestBodyString);
+
+        // 记录日志：请求体
+        gs.info("SF002 Request Body: " + requestBodyString);
+
+        // 执行请求
+        var response = request.execute();
+        var responseBody = response.getBody();
+        var responseCode = response.getStatusCode();
+
+        // 记录日志：响应结果
+        gs.info("SF002 Response Code: " + responseCode);
+        gs.info("SF002 Response Body: " + responseBody);
+
+        // 处理响应
+        if (responseCode == 200) {
+            resultFlg = true;
+            gs.info("SF002 调用成功: " + responseBody);
+        } else {
+            resultFlg = false;
+            gs.error("SF002 调用失败: " + responseBody);
+        }
+
+        // 关闭文件流
+        fileStream.close();
+
+        return resultFlg;
+    } catch (error) {
+        gs.error("SF002 调用异常: " + error);
+        return false;
+    }
+},
+
+    type: 'MyMaintenanceIntegration'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-17 06:40:17</sys_created_on>
+        <sys_id>ba65145d832a1610d679bfc6feaad369</sys_id>
+        <sys_mod_count>39</sys_mod_count>
+        <sys_name>MyMaintenanceIntegration</sys_name>
+        <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+        <sys_update_name>sys_script_include_ba65145d832a1610d679bfc6feaad369</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-01-20 03:56:34</sys_updated_on>
+    </sys_script_include>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>ba65145d832a1610d679bfc6feaad369</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-17 06:40:17</sys_created_on>
+        <sys_id>be3e5c95836a1610d679bfc6feaad351</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-17 06:40:17</sys_updated_on>
+        <table>sys_script_include</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

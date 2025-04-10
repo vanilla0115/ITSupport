@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description>优先级为高时优先级字段显示为红色</description>
+        <field/>
+        <global>true</global>
+        <isolate_script>true</isolate_script>
+        <messages/>
+        <name>PriorityTurnToRed</name>
+        <order/>
+        <script><![CDATA[function onLoad() {
+    // 检查字段的值是否为高优先级
+    if (g_form.getValue('Priority') == '高') { 
+        // 设置字段颜色为红色
+        var priorityField = g_form.getControl('Priority'); // 获取字段控件
+        priorityField.style.color = 'red';
+    }
+}
+]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-15 10:02:23</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>64d83ee8832e5210d679bfc6feaad334</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>PriorityTurnToRed</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+        <sys_update_name>sys_script_client_64d83ee8832e5210d679bfc6feaad334</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-15 10:07:10</sys_updated_on>
+        <table>x_1466305_fortes_0_x_request_it_support</table>
+        <type/>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

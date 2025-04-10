@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>false</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_1466305_fortes_0_x_request_it_support</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>toflamingo</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+    try {
+        // 获取当前记录的 sys_id
+        var tableSysId = current.sys_id;
+
+        // 查询 sys_attachment 表，获取当前记录的附件
+        var attachment = new GlideRecord('sys_attachment');
+        attachment.addQuery('table_sys_id', tableSysId); // 根据当前记录的 sys_id 查询附件
+        attachment.query();
+
+        var fileNo = 1;
+
+        while (attachment.next()) {
+            var gsa = new GlideSysAttachment();
+
+            // 获取文件内容
+            var fileStream = new Packages.java.io.FileInputStream(gsa.getContentStream(attachment));
+            var fileName = attachment.getValue('file_name'); // 获取文件名
+
+            // 获取当前时间戳
+            var timestamp = Math.floor(new GlideDateTime().getNumericValue() / 1000);
+
+            // 构建 API Key 和签名
+            var apiKey = "STG_SIDB_ANALYSIS_INFO_API_KEY";
+            var apiSecret = "4AN5L7HRFE7YYRGAANYN3NAE74TJPA5Y7NJ3JML773YJT5G4E5N4FNMYENH7TA7A";
+            var signature = getSHA256Str(apiKey + apiSecret + timestamp).toLowerCase(); // 确保签名是小写
+
+            // 创建 REST 请求
+            var request = new sn_ws.RESTMessageV2();
+            request.setHttpMethod('POST');
+            request.setEndpoint('http://121.36.243.219:8081/uploadSF002');
+
+            // 设置 multipart/form-data 的 boundary
+            var boundary = "----WebKitFormBoundary" + new GlideGuid().generate();
+            request.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+            // 设置 API Key 认证
+            request.setRequestHeader("apikey", apiKey);
+            request.setRequestHeader("sigtime", timestamp.toString());
+            request.setRequestHeader("sig", signature);
+
+            // 构建 JSON 数据
+            var jsonData = {
+                P_SIDB_WAID_NO: "J24-0085",
+                P_SIDB_ANALYS_NO: "SAN0001293",
+                P_SIDB_RECEIPT_NO: "2171200026RBF",
+                P_SIDB_FILE_NO: fileNo.toString()
+            };
+            var jsonString = JSON.stringify(jsonData);
+
+            // 构建 multipart/form-data 请求体
+            var body = [];
+            body.push("--" + boundary);
+            body.push('Content-Disposition: form-data; name="jsonData"');
+            body.push('Content-Type: application/json');
+            body.push('');
+            body.push(jsonString);
+
+            body.push("--" + boundary);
+            body.push('Content-Disposition: form-data; name="P_SIDB_FILE"; filename="' + fileName + '"');
+            body.push('Content-Type: application/octet-stream');
+            body.push('');
+            body.push(fileStream);
+            body.push("--" + boundary + "--");
+
+            // 将请求体转换为字符串
+            var requestBody = body.join("\r\n");
+
+            // 设置请求体
+            request.setRequestBody(requestBody);
+
+            // 执行请求
+            var response = request.execute();
+
+            // 获取响应体和状态码
+            var responseBody = response.getBody();
+            var httpStatus = response.getStatusCode();
+            gs.info("Response Body: " + global.JSON.stringify(responseBody));
+
+            if (httpStatus == 200 || httpStatus == 201) {
+                gs.info("Upload success for file " + fileNo + ":");
+            } else {
+                gs.info("Upload failed for file " + fileNo + " with status code: " + httpStatus);
+                gs.error("Error Response Body: " + responseBody);
+            }
+
+            fileNo++;
+        }
+
+        if (fileNo == 1) {
+            gs.error("No attachment found for the specified record.");
+        }
+    } catch (e) {
+        gs.error("An error occurred: " + e.getMessage());
+    }
+
+    // 计算 SHA-256 签名
+    function getSHA256Str(str) {
+        var messageDigest = new GlideDigest();
+        var hash = messageDigest.getSHA256Hex(str);
+        return hash;
+    }
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-01-20 02:14:35</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>35276e8c83579210d679bfc6feaad3db</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>toflamingo</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+        <sys_update_name>sys_script_35276e8c83579210d679bfc6feaad3db</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-01-20 03:01:30</sys_updated_on>
+        <template/>
+        <when>async_always</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=35276e8c83579210d679bfc6feaad3db"/>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>35276e8c83579210d679bfc6feaad3db</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-01-20 02:14:35</sys_created_on>
+        <sys_id>06776e8c83579210d679bfc6feaad3ad</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-01-20 02:14:35</sys_updated_on>
+        <table>sys_script</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

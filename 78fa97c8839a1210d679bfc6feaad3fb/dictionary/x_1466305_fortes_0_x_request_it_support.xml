@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="c1a5de5683521210d679bfc6feaad3e9" label="x_request_it_support" max_length="40" name="x_1466305_fortes_0_x_request_it_support" type="collection">
+        <element choice="1" default="draft" label="State" max_length="40" name="state" read_only="true" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="已提交" sequence="1" value="submitted"/>
+                <element inactive_on_update="false" label="已完成" sequence="3" value="completed"/>
+                <element inactive_on_update="false" label="进行中" sequence="2" value="in_progress"/>
+                <element inactive_on_update="false" label="草稿" sequence="0" value="draft"/>
+            </choice>
+        </element>
+        <element label="assigned to" mandatory="true" max_length="32" name="assigned_to" reference="sys_user" type="reference"/>
+        <element choice="1" default="3" label="Priority" max_length="40" name="priority" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="中" sequence="0" value="2"/>
+                <element inactive_on_update="false" label="高" sequence="2" value="1"/>
+                <element inactive_on_update="false" label="低" sequence="1" value="3"/>
+            </choice>
+        </element>
+        <element label="Description" mandatory="true" max_length="300" name="description" type="string"/>
+        <element label="Closed at" max_length="40" name="closed_at" type="glide_date_time"/>
+        <element label="Cause" max_length="300" name="cause" read_only="true" type="string"/>
+        <element label="submitted by" max_length="32" name="submitted_by" read_only="true" reference="sys_user" type="reference"/>
+        <element label="Ticket number" max_length="8" name="ticket_number" read_only="true" type="string"/>
+        <index name="index">
+            <element name="assigned_to"/>
+        </index>
+        <index name="index2">
+            <element name="submitted_by"/>
+        </index>
+    </element>
+</database>

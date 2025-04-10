@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_1466305_fortes_0.GenerateTicketNumber</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>生成ticket_number为IT+year+count(number)+1的形式</description>
+        <mobile_callable>false</mobile_callable>
+        <name>GenerateTicketNumber</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var GenerateTicketNumber = Class.create();
+GenerateTicketNumber.prototype = {
+    initialize: function () {},
+
+    generate: function () {
+        // 获取当前年份的后两位
+        var year = new GlideDateTime().getYearLocalTime().toString().slice(2);
+
+        // 获取当前年份的起始和结束时间
+        var startOfYear = new GlideDateTime();
+        startOfYear.setDisplayValue("20" + year + "-01-01 00:00:00");
+        var endOfYear = new GlideDateTime();
+        endOfYear.setDisplayValue("20" + year + "-12-31 23:59:59");
+
+        // 使用 GlideRecord 查询当前年份的最新工单号
+        var latestTicket = null;
+        var gr = new GlideRecord('x_1466305_fortes_0_x_request_it_support'); // 替换为实际表名
+        gr.addQuery('sys_created_on', '>=', startOfYear);
+        gr.addQuery('sys_created_on', '<=', endOfYear);
+        gr.orderByDesc('sys_created_on'); // 按创建时间倒序排列
+        gr.query();
+
+        if (gr.next()) {
+            latestTicket = gr.getValue('ticket_number'); // 获取最新的 ticket_number
+        }
+
+        var count = 1; // 默认从 1 开始
+        if (latestTicket) {
+            // 如果有最新工单号，从中提取序号并加 1
+            var latestYear = latestTicket.slice(2, 4); // 提取年份
+            var latestSerial = parseInt(latestTicket.slice(4), 10); // 提取序号
+
+            if (latestYear === year) {
+                count = latestSerial + 1; // 同一年，序号加 1
+            }
+        }
+
+        // 生成新的工单号
+        var ticketNumber = 'IT' + year + count.toString().padStart(4, '0');
+        return ticketNumber;
+    },
+
+    type: 'GenerateTicketNumber'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-14 12:56:54</sys_created_on>
+        <sys_id>36d6dad083e61210d679bfc6feaad358</sys_id>
+        <sys_mod_count>32</sys_mod_count>
+        <sys_name>GenerateTicketNumber</sys_name>
+        <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+        <sys_update_name>sys_script_include_36d6dad083e61210d679bfc6feaad358</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-15 04:39:55</sys_updated_on>
+    </sys_script_include>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>36d6dad083e61210d679bfc6feaad358</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-14 12:56:53</sys_created_on>
+        <sys_id>82a7561083e61210d679bfc6feaad3f1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-14 12:56:53</sys_updated_on>
+        <table>sys_script_include</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

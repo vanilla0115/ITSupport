@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_email">
+    <sys_script_email action="INSERT_OR_UPDATE">
+        <name>email for high priority</name>
+        <new_lines_to_html>false</new_lines_to_html>
+        <script><![CDATA[(function runMailScript(/* GlideRecord */ current, /* TemplatePrinter */ template,
+  /* Optional EmailOutbound */ email, /* Optional GlideRecord */ email_action,
+  /* Optional GlideRecord */ event) {
+
+    // 获取工单相关信息
+    var incidentNumber = current.ticket_number; // 工单编号
+    var priority = current.priority.getDisplayValue(); // 优先级
+	var incidentLink = "https://dev262528.service-now.com/nav_to.do?uri=x_1466305_fortes_0_x_request_it_support.do?sys_id=" + current.sys_id; // 工单链接
+
+    // 检查优先级是否为“高”
+    // if (priority === "高" ) {
+        // // 添加收件人（Senior Manager）
+        // email.addAddress('to', 'MengA.Li@sony.com', 'Senior Manager');
+
+        // 邮件内容
+        template.print('<p>以下工单已被标记为高优先级，请您尽快处理：</p>');
+        template.print('<ul>');
+        template.print('<li><strong>工单号</strong>: <a href="' + incidentLink + '">' + incidentNumber + '</a></li>');
+        template.print('<li><strong>优先级</strong>: ' + priority + '</li>');
+        template.print('</ul>');
+        template.print('<p>请点击以下链接查看工单详情并进行处理：</p>');
+        template.print('<p><a href="' + incidentLink + '">查看工单详情</a></p>');
+
+    // }
+
+})(current, template, email, email_action, event);]]></script>
+        <sys_class_name>sys_script_email</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-16 09:47:46</sys_created_on>
+        <sys_id>7f0f3b388326d210d679bfc6feaad388</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>email for high priority</sys_name>
+        <sys_package display_value="IT Support" source="x_1466305_fortes_0">78fa97c8839a1210d679bfc6feaad3fb</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="IT Support">78fa97c8839a1210d679bfc6feaad3fb</sys_scope>
+        <sys_update_name>sys_script_email_7f0f3b388326d210d679bfc6feaad388</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-16 11:57:36</sys_updated_on>
+    </sys_script_email>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>7f0f3b388326d210d679bfc6feaad388</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-16 09:47:46</sys_created_on>
+        <sys_id>578f3bb48326d210d679bfc6feaad3a3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-16 09:47:46</sys_updated_on>
+        <table>sys_script_email</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>
